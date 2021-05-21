@@ -1,11 +1,12 @@
 const mqtt = require('mqtt');
-
+const log = require('../utils/AppLogger')
 class MqttHandler {
-  constructor(hostName, username = null, username = null) {
+  constructor(hostName, topic=null, username = null) {
     this.mqttClient = null;
     this.host = `mqtt://${hostName}`;
     this.username = username;
     this.password = username;
+    this.topic = topic;
   }
   
   connect() {
@@ -24,11 +25,11 @@ class MqttHandler {
     });
 
     // mqtt subscriptions
-    this.mqttClient.subscribe('mytopic', {qos: 0});
+    this.mqttClient.subscribe(this.topic, {qos: 0});
 
     // When a message arrives, console.log it
     this.mqttClient.on('message', function (topic, message) {
-      console.log(message.toString());
+      console.log(topic.toString(), message.toString());
     });
 
     this.mqttClient.on('close', () => {
@@ -38,7 +39,7 @@ class MqttHandler {
 
   // Sends a mqtt message to topic: mytopic
   sendMessage(message) {
-    this.mqttClient.publish('mytopic', message);
+    this.mqttClient.publish(this.topic, message);
   }
 }
 
