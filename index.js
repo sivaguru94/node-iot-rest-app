@@ -1,20 +1,38 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const app = express();
-const mqttHandler = require('./mqtt/MqttHandler');
+const mongoose = require('mongoose');
+const app = require('./src/app');
+const config = require('./src/config/config');
+const logger = require('./src/config/logger');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }))
-
-const mqttClient = new mqttHandler();
-mqttClient.connect();
-
-// Routes
-app.post("/send-mqtt", function(req, res) {
-    mqttClient.sendMessage(req.body.message);
-    res.status(200).send("Message sent to mqtt");
+let server;
+mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
+    logger.info('Connected to MongoDB');
+    server = app.listen(config.port, () => {
+        logger.info(`Listening to port ${config.port}`);
+    });
 });
 
-const server = app.listen(3000, function () {
-    console.log("app running on port.", server.address().port);
+const exitHandler = () => {
+    if (server) {
+        server.close(() => {
+            logger.info('Server closed');
+            process.exit(1);
+        });
+    } else {
+        process.exit(1);
+    }
+};
+
+const unexpectedErrorHandler = (error) => {
+    logger.error(error);
+    exitHandler();
+};
+
+process.on('uncaughtException', unexpectedErrorHandler);
+process.on('unhandledRejection', unexpectedErrorHandler);
+
+process.on('SIGTERM', () => {
+    logger.info('SIGTERM received');
+    if (server) {
+        server.close();
+    }
 });
