@@ -4,6 +4,7 @@ const AppEnvironment = {
         MQTT: {
             topic: 'HOME_AUTOMATION/MESSAGE',
             hostName: 'raspberrypi.local',
+            port: 1833,
             username: APP_NAME,
             password: ''
         }
@@ -12,6 +13,7 @@ const AppEnvironment = {
         MQTT: {
             topic: 'HOME_AUTOMATION/MESSAGE',
             hostName: 'localhost',
+            port: 1833,
             username: APP_NAME,
             password: ''
         }
