@@ -1,4 +1,5 @@
 const APP_NAME = 'Node_Server_IoT_Home_Automation';
+const MQTT_CLIENT = 'appMqttHandler';
 const AppEnvironment = {
   local: {
     MQTT: {
@@ -23,4 +24,5 @@ const AppEnvironment = {
 module.exports = {
   AppName: APP_NAME,
   AppEnvironment,
+  MQTT_CLIENT,
 };

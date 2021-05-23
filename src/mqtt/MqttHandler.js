@@ -1,5 +1,6 @@
 const mqtt = require('mqtt');
 const AppConstants = require('../utils/AppConstants');
+const logger = require('../config/logger');
 
 class MqttHandler {
   constructor(host = 'localhost', port = 1883, userName = AppConstants.AppName, password = '') {
@@ -20,13 +21,13 @@ class MqttHandler {
 
     // Mqtt error calback
     this.mqttClient.on('error', (err) => {
-      console.log(err);
+      logger.error(err);
       this.mqttClient.end();
     });
 
     // Connection callback
     this.mqttClient.on('connect', () => {
-      console.log(`mqtt client connected`);
+      logger.info(`mqtt client connected`);
     });
 
     // mqtt subscriptions
@@ -34,11 +35,11 @@ class MqttHandler {
 
     // When a message arrives, console.log it
     this.mqttClient.on('message', function (topic, message) {
-      console.log(`Message ====> ${message.toString()}`);
+      logger.info(`Message ====> ${message.toString()}`);
     });
 
     this.mqttClient.on('close', () => {
-      console.log(`mqtt client disconnected`);
+      logger.info(`mqtt client disconnected`);
     });
   }
 
