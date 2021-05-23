@@ -30,6 +30,7 @@ const getDeviceByName = catchAsync(async (req, res) => {
   if (!result) {
     throw new ApiError(httpStatus.NOT_FOUND, `Device with name ${req.query.name}`)
   }
+  res.send(result);
 });
 
 const updateDevice = catchAsync(async (req, res) => {
