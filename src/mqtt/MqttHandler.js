@@ -45,7 +45,7 @@ class MqttHandler {
 
   // Sends a mqtt message to topic: mytopic
   sendMessage(message) {
-    console.log('sending message', message);
+    logger.info('sending message', message);
     this.mqttClient.publish('mytopic', message);
   }
 }
