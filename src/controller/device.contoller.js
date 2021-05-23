@@ -5,39 +5,48 @@ const catchAsync = require('../utils/catchAsync');
 const { deviceService } = require('../service');
 
 const createDevice = catchAsync(async (req, res) => {
-    const device = await deviceService.createDevice(req.body);
-    res.status(httpStatus.CREATED).send(device);
+  const device = await deviceService.createDevice(req.body);
+  res.status(httpStatus.CREATED).send(device);
 });
 
 const getDevices = catchAsync(async (req, res) => {
-    const filter = pick(req.query, ['name', 'role']);
-    const options = pick(req.query, ['sortBy', 'limit', 'page']);
-    const result = await deviceService.queryDevices(filter, options);
-    res.send(result);
+  const filter = pick(req.query, ['name', 'role']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await deviceService.queryDevices(filter, options);
+  res.send(result);
 });
 
 const getDevice = catchAsync(async (req, res) => {
-    const device = await deviceService.getDeviceById(req.params.deviceId);
-    if (!device) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Device not found');
-    }
-    res.send(device);
+  const device = await deviceService.getDeviceById(req.params.deviceId);
+  if (!device) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Device not found');
+  }
+  res.send(device);
+});
+
+
+const getDeviceByName = catchAsync(async (req, res) => {
+  const result = await deviceService.getDeviceByName(req.query.name);
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, `Device with name ${req.query.name}`)
+  }
 });
 
 const updateDevice = catchAsync(async (req, res) => {
-    const device = await deviceService.updateDeviceById(req.params.deviceId, req.body);
-    res.send(device);
+  const device = await deviceService.updateDeviceById(req.params.deviceId, req.body);
+  res.send(device);
 });
 
 const deleteDevice = catchAsync(async (req, res) => {
-    await deviceService.deleteDeviceById(req.params.deviceId);
-    res.status(httpStatus.NO_CONTENT).send();
+  await deviceService.deleteDeviceById(req.params.deviceId);
+  res.status(httpStatus.NO_CONTENT).send();
 });
 
 module.exports = {
-    createDevice,
-    getDevices,
-    getDevice,
-    updateDevice,
-    deleteDevice,
+  createDevice,
+  getDevices,
+  getDevice,
+  getDeviceByName,
+  updateDevice,
+  deleteDevice,
 };
