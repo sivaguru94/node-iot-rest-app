@@ -24,7 +24,6 @@ const getDevice = catchAsync(async (req, res) => {
   res.send(device);
 });
 
-
 const getDeviceByName = catchAsync(async (req, res) => {
   const result = await deviceService.getDeviceByName(req.query.name);
   if (!result) {
