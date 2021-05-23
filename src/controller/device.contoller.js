@@ -28,7 +28,7 @@ const getDevice = catchAsync(async (req, res) => {
 const getDeviceByName = catchAsync(async (req, res) => {
   const result = await deviceService.getDeviceByName(req.query.name);
   if (!result) {
-    throw new ApiError(httpStatus.NOT_FOUND, `Device with name ${req.query.name}`)
+    throw new ApiError(httpStatus.NOT_FOUND, `Device with name ${req.query.name}`);
   }
   res.send(result);
 });
