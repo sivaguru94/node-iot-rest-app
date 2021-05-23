@@ -1,4 +1,3 @@
-const { name } = require('faker');
 const Joi = require('joi');
 const { objectId } = require('../../validaiors/validators');
 
