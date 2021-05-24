@@ -3,6 +3,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { deviceService } = require('../service');
+const logger = require('../config/logger');
 
 const createDevice = catchAsync(async (req, res) => {
   const device = await deviceService.createDevice(req.body);
@@ -42,6 +43,18 @@ const deleteDevice = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const sendMqttMessageByDeviceID = catchAsync(async (req, res) => {
+  deviceService
+    .sendMqttMessageByDeviceID(req.params.deviceId, req.query.message)
+    .then((data) => {
+      logger.info(data);
+      res.send(`Sent '${req.query.message}' to device ${req.params.deviceId}`);
+    })
+    .catch((err) => {
+      throw new ApiError(httpStatus[500], `${err}`);
+    });
+});
+
 module.exports = {
   createDevice,
   getDevices,
@@ -49,4 +62,5 @@ module.exports = {
   getDeviceByName,
   updateDevice,
   deleteDevice,
+  sendMqttMessageByDeviceID,
 };

@@ -1,4 +1,4 @@
-const mqtt = require('mqtt');
+const mqtt = require('async-mqtt');
 const AppConstants = require('../utils/AppConstants');
 const logger = require('../config/logger');
 
@@ -27,7 +27,7 @@ class MqttHandler {
 
     // Connection callback
     this.mqttClient.on('connect', () => {
-      logger.info(`mqtt client connected`);
+      logger.info(`Connected to MQTT Host ${this.mqttConnectUrl}`);
     });
 
     // mqtt subscriptions
@@ -35,7 +35,7 @@ class MqttHandler {
 
     // When a message arrives, console.log it
     this.mqttClient.on('message', function (topic, message) {
-      logger.info(`Message ====> ${message.toString()}`);
+      logger.info(`Topic: ${topic} :::: Message: ${message.toString()}`);
     });
 
     this.mqttClient.on('close', () => {
@@ -44,9 +44,15 @@ class MqttHandler {
   }
 
   // Sends a mqtt message to topic: mytopic
-  sendMessage(message) {
-    logger.info('sending message', message);
-    this.mqttClient.publish('mytopic', message);
+  sendMessage(topic, message) {
+    logger.info(`sending ${message} to topic ${topic}`);
+    return this.mqttClient.publish(topic, message);
+  }
+
+  // Subscribe to a topic
+  subscribe(topic) {
+    logger.info(`Subscribing to Topic : ${topic}`);
+    return this.mqttClient.subscribe(topic, { qos: 0 });
   }
 }
 

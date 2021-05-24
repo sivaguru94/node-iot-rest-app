@@ -1,7 +1,9 @@
 const httpStatus = require('http-status');
 const { Device } = require('../model');
 const ApiError = require('../utils/ApiError');
+const { MQTT_CLIENT } = require('../utils/AppConstants');
 const utils = require('../utils/AppUtils');
+const mqtt = require('./mqtt.service');
 /**
  * Create a device
  * @param {Object} deviceBody
@@ -38,7 +40,7 @@ const getDeviceById = async (id) => {
 };
 
 /**
- * Get device by email
+ * Get device by name
  * @param {string} name
  * @returns {Promise<Device>}
  */
@@ -82,6 +84,14 @@ const deleteDeviceById = async (deviceId) => {
   return device;
 };
 
+const sendMqttMessageByDeviceID = async (deviceId, message) => {
+  const device = await getDeviceById(deviceId);
+  if (!device) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Device not found');
+  }
+  return mqtt.sendMqttMessageToDevice(device, message);
+};
+
 module.exports = {
   createDevice,
   queryDevices,
@@ -89,4 +99,5 @@ module.exports = {
   getDeviceByName,
   updateDeviceById,
   deleteDeviceById,
+  sendMqttMessageByDeviceID,
 };

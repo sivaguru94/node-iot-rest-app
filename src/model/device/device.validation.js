@@ -49,6 +49,14 @@ const deleteDevice = {
   }),
 };
 
+const sendMqttMessage = {
+  params: Joi.object().keys({
+    deviceId: Joi.string().custom(objectId),
+  }),
+  query: Joi.object().keys({
+    message: Joi.string().min(2),
+  }),
+};
 module.exports = {
   createDevice,
   getDevices,
@@ -56,4 +64,5 @@ module.exports = {
   getDeviceByName,
   updateDevice,
   deleteDevice,
+  sendMqttMessage,
 };
