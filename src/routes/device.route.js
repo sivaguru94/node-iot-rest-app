@@ -18,4 +18,8 @@ router
   .patch(validate(deviceValidation.updateDevice), deviceController.updateDevice)
   .delete(validate(deviceValidation.deleteDevice), deviceController.deleteDevice);
 
+router
+  .route('/:deviceId/send-mqtt-message')
+  .get(validate(deviceValidation.sendMqttMessage), deviceController.sendMqttMessageByDeviceID);
+
 module.exports = router;
