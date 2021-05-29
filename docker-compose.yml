@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+    app:
+        container_name: app-iot-home-automation
+        restart: always
+        build: .
+        ports:
+            - '3000:3000'
+        links:
+            - mongodb
+            - mosquitto
+    mongodb:
+        image: mongo:latest
+        container_name: mongodb-iot-home-automation
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: rootpassword@123
+            MONGO_INITDB_DATABASE: iot-home-automation
+        ports:
+            - 27017:27017
+        volumes:
+            - ./docker/mongodb/initdb.d/:/docker-entrypoint-initdb.d/
+            # - ./mongo-volume:/data/db
+    mosquitto:
+        container_name: eclipse-mosquitto
+        image: eclipse-mosquitto
+        restart: always   
+        ports:
+            - '1883:1883'
+            - '9001:9001'
+        environment:
+            - 'PUID:1883'
+            - 'PGID:1883' 
+        volumes:
+            - mosquittodata:/data
+volumes:
+    mosquittodata:
