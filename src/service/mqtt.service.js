@@ -1,6 +1,6 @@
 const MqttHandler = require('../mqtt/AsyncMqttHandler');
 
-const mqttClient = new MqttHandler();
+const mqttClient = new MqttHandler('mosquitto');
 mqttClient.connect();
 
 const sendMqttMessageToDevice = (device, message) => {
