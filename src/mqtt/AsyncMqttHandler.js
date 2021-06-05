@@ -11,29 +11,23 @@ class MqttHandler {
       username: userName,
       password,
     };
-
     this.mqttConnectUrl = `mqtt://${this.host}:${this.port}`;
   }
 
   connect() {
-    // Connect mqtt with credentials (in case of needed, otherwise we can omit 2nd param)
     this.mqttClient = mqtt.connect(this.mqttConnectUrl, this.options);
 
-    // Mqtt error calback
     this.mqttClient.on('error', (err) => {
       logger.error(err);
       this.mqttClient.end();
     });
 
-    // Connection callback
     this.mqttClient.on('connect', () => {
       logger.info(`Connected to MQTT Host ${this.mqttConnectUrl}`);
     });
 
-    // mqtt subscriptions
     this.mqttClient.subscribe('mytopic', { qos: 0 });
 
-    // When a message arrives, console.log it
     this.mqttClient.on('message', function (topic, message) {
       logger.info(`Topic: ${topic} :::: Message: ${message.toString()}`);
     });
@@ -43,7 +37,6 @@ class MqttHandler {
     });
   }
 
-  // Sends a mqtt message to topic: mytopic
   sendMessage(topic, message) {
     logger.info(`sending ${message} to topic ${topic}`);
     return this.mqttClient.publish(topic, message);

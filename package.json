@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.js",
-    "prettier:fix": "prettier --write **/*.js"
+    "prettier:fix": "prettier --write **/*.js",
+    "docker:build:local": "docker-compose up -d --build",
+    "docker:deploy:local": "docker-compose up -d"
   },
   "author": "Sivaguru Ravi",
   "license": "ISC",
