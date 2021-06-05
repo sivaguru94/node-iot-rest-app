@@ -4,19 +4,17 @@
 with an Mosquitto MQTT brokerinstalled that is used
 as an interface to the IOT Client.
 
-## Tech Users
+## *Tech Users*
 - Node
 - Express
 - MQTT
 
-## Installation
-
-Dillinger requires [Node.js](https://nodejs.org/) to run.
+## *Installation*
 
 Install the dependencies and devDependencies and start the server.
 
 ```sh
 cd node-express-server-rest-api
-npm i
-node index
+yarn install
+yar start
 ```
