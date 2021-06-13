@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+    app:
+        container_name: app-iot-home-automation
+        restart: always
+        build: .
+        ports:
+            - '3000:3000'
+        links:
+            - mongodb
+            - mosquitto
+    mongodb:
+        image: mongo:latest
+        container_name: mongodb-iot-home-automation
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: rootpassword@123
+            MONGO_INITDB_DATABASE: iot-home-automation
+        ports:
+            - 27017:27017
+        volumes:
+            - ./docker/mongodb/initdb.d/:/docker-entrypoint-initdb.d/
+            # Un-comment the line below if be files need to be externalised.
+            # - ./mongo-volume:/data/db
+    mosquitto:
+        image: ansi/mosquitto
+        container_name: mosquitto
+        ports:
+            - 1883:1883
+        entrypoint: /usr/local/sbin/mosquitto -c /etc/mosquitto/mosquitto.conf
+        volumes:
+            - ./docker/mosquitto/etc:/etc/mosquitto:ro
+            - ./docker/mosquitto/log:/var/log/mosquitto:rw
