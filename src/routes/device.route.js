@@ -9,8 +9,7 @@ const router = express.Router();
 router
   .route('/')
   .post(validate(deviceValidation.createDevice), deviceController.createDevice)
-  .get(validate(deviceValidation.getDevices), deviceController.getDevices)
-  .get(validate(deviceValidation.getDeviceByName), deviceController.getDeviceByName);
+  .get(validate(deviceValidation.getDevices), deviceController.getDevices);
 
 router
   .route('/:deviceId')
@@ -20,6 +19,10 @@ router
 
 router
   .route('/:deviceId/send-mqtt-message')
-  .get(validate(deviceValidation.sendMqttMessage), deviceController.sendMqttMessageByDeviceID);
+  .patch(validate(deviceValidation.sendMqttMessage), deviceController.sendMqttMessageByDeviceID);
+
+router
+  .route('/:deviceId/turn-on-off')
+  .patch(validate(deviceValidation.toggleTurnOnOffDevice), deviceController.toggleTurnOnOffDevice);
 
 module.exports = router;

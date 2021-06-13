@@ -22,6 +22,7 @@ services:
             - 27017:27017
         volumes:
             - ./docker/mongodb/initdb.d/:/docker-entrypoint-initdb.d/
+            # Un-comment the line below if be files need to be externalised.
             # - ./mongo-volume:/data/db
     mosquitto:
         image: ansi/mosquitto

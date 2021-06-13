@@ -15,18 +15,13 @@ const getDevices = {
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
+    topic: Joi.string(),
   }),
 };
 
 const getDevice = {
   params: Joi.object().keys({
     deviceId: Joi.string().custom(objectId),
-  }),
-};
-
-const getDeviceByName = {
-  query: Joi.object().keys({
-    name: Joi.string().required(),
   }),
 };
 
@@ -45,7 +40,6 @@ const updateDevice = {
 const deleteDevice = {
   params: Joi.object().keys({
     deviceId: Joi.string().custom(objectId),
-    isDeviceOn: Joi.boolean().required(),
   }),
 };
 
@@ -53,16 +47,23 @@ const sendMqttMessage = {
   params: Joi.object().keys({
     deviceId: Joi.string().custom(objectId),
   }),
-  query: Joi.object().keys({
-    message: Joi.string().min(2),
+  body: Joi.object().keys({
+    message: Joi.object().required(),
   }),
 };
+
+const toggleTurnOnOffDevice = {
+  params: Joi.object().keys({
+    deviceId: Joi.string().custom(objectId),
+  }),
+};
+
 module.exports = {
   createDevice,
   getDevices,
   getDevice,
-  getDeviceByName,
   updateDevice,
   deleteDevice,
   sendMqttMessage,
+  toggleTurnOnOffDevice,
 };
