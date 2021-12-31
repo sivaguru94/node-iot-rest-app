@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('../plugins');
 
-const deviceSchema = mongoose.Schema(
+const deviceSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -22,6 +22,10 @@ const deviceSchema = mongoose.Schema(
       type: Boolean,
       required: true,
       default: false,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
     },
   },
   { timestamps: true }

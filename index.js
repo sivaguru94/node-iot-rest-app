@@ -2,14 +2,27 @@ const mongoose = require('mongoose');
 const app = require('./src/app');
 const config = require('./src/config/config');
 const logger = require('./src/config/logger');
+const MqttHandler = require('./src/mqtt/AsyncMqttHandler');
 
 let server;
-mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
-  logger.info('Connected to MongoDB');
-  server = app.listen(config.port, () => {
-    logger.info(`Listening to port ${config.port}`);
+
+// Connect to MongoDB
+mongoose
+  .connect(config.mongoose.url, config.mongoose.options)
+  .then(() => {
+    logger.info('Connected to MongoDB');
+    server = app.listen(config.port, () => {
+      logger.info(`Listening to port ${config.port}`);
+    });
+  })
+  .catch((error) => {
+    logger.info('Error connecting to MongoDB qith error');
+    logger.info(error);
   });
-});
+
+// Connect to MQTT
+global.mqttClient = new MqttHandler(config.mqtt.host, config.mqtt.port, config.mqtt.user, config.mqtt.password);
+global.mqttClient.connect();
 
 const exitHandler = () => {
   if (server) {

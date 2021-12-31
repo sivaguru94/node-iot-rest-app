@@ -2,11 +2,13 @@ const dotenv = require('dotenv');
 const path = require('path');
 const Joi = require('joi');
 
-dotenv.config({ path: path.join(__dirname, '../../.env') });
+const getNodeEnv = () => (process.env.NODE_ENV ? `.${process.env.NODE_ENV}` : '');
+
+dotenv.config({ path: path.join(__dirname, `../../.env${getNodeEnv()}`) });
 
 const envVarsSchema = Joi.object()
   .keys({
-    NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
+    NODE_ENV: Joi.string().valid('local', 'docker', 'production', 'development', 'test').required(),
     PORT: Joi.number().default(3000),
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
     MOSQUITTO_HOST: Joi.string().required().description('Mqtt host name'),

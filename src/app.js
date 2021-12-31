@@ -9,7 +9,6 @@ const morgan = require('./config/morgan');
 const routes = require('./routes');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
-const MqttHandler = require('./mqtt/AsyncMqttHandler');
 
 const app = express();
 
@@ -48,9 +47,5 @@ app.use(errorConverter);
 
 // handle error
 app.use(errorHandler);
-
-// Connect to MQTT
-global.mqttClient = new MqttHandler(config.mqtt.host, config.mqtt.port, config.mqtt.user, config.mqtt.password);
-global.mqttClient.connect();
 
 module.exports = app;
