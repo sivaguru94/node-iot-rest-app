@@ -4,7 +4,7 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { deviceService } = require('../service');
 const logger = require('../config/logger');
-const { success } = require('../utils/AppUtils')
+const { success } = require('../utils/AppUtils');
 
 const createDevice = catchAsync(async (req, res) => {
   const device = await deviceService.createDevice(req.body);
