@@ -13,7 +13,8 @@
     "prettier:fix": "prettier --write **/*.js",
     "docker:build:local": "docker-compose up -d --build",
     "docker:deploy:local": "docker-compose up -d",
-    "nodemon-dev": "nodemon --watch src --exec \"yarn docker:build:local\"\n\n"
+    "nodemon-dev": "nodemon --watch src --exec \"yarn docker:build:local\"\n\n",
+    "kill-docker": "docker kill $(docker ps -q)"
   },
   "author": "Sivaguru Ravi",
   "license": "ISC",
