@@ -17,9 +17,11 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: rootpassword@123
-            MONGO_INITDB_DATABASE: iot-home-automation
+            MONGO_INITDB_USERNAME: iot_home_automation
+            MONGO_INITDB_PASSWORD: pass@123
+            MONGO_INITDB_DATABASE: admin
         ports:
-            - 27017:27017
+            - 27018:27017
         volumes:
             - ./docker/mongodb/initdb.d/:/docker-entrypoint-initdb.d/
             # Un-comment the line below if be files need to be externalised.

@@ -5,18 +5,20 @@ const logger = require('./src/config/logger');
 const MqttHandler = require('./src/mqtt/AsyncMqttHandler');
 
 let server;
-
 // Connect to MongoDB
 mongoose
   .connect(config.mongoose.url, config.mongoose.options)
   .then(() => {
-    logger.info('Connected to MongoDB');
+    logger.info(`Connecting to MongoDB \n 
+    Connected: \n 
+    URL : ${config.mongoose.url}, 
+    config : ${JSON.stringify(config.mongoose.options)}`);
     server = app.listen(config.port, () => {
       logger.info(`Listening to port ${config.port}`);
     });
   })
   .catch((error) => {
-    logger.info('Error connecting to MongoDB qith error');
+    logger.info('Error connecting to MongoDB with error');
     logger.info(error);
   });
 

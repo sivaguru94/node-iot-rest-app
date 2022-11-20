@@ -194,3 +194,6 @@ log/mosquitto.log
 config/mosquitto.conf
 config/password.txt
 /.idea/
+
+# MOngo Docker Files
+/docker/mongodb/mongo-volume/*
