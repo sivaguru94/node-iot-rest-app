@@ -1,11 +1,12 @@
 const Joi = require('joi');
-const { objectId } = require('../../validaiors/validators');
+const { objectId } = require('./validators');
 
 const createDevice = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     room: Joi.string().required(),
     isDeviceOn: Joi.boolean().required(),
+    userId: Joi.string().custom(objectId),
   }),
 };
 
