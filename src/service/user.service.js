@@ -4,25 +4,25 @@ const ApiError = require('../utils/ApiError');
 const utils = require('../utils/AppUtils');
 
 /**
- * Get device by name
+ * Get user by name
  * @param {string} name
- * @returns {Promise<Device>}
+ * @returns {Promise<User>}
  */
 const getUserByName = async (name) => {
   return User.find({ name });
 };
 
 /**
- * Get device by topic
+ * Get user by email
  * @param {string} email
- * @returns {Promise<Device>}
+ * @returns {Promise<User>}
  */
 const getUserByEmail = async (email) => {
   return User.find({ email });
 };
 
 /**
- * Create a device
+ * Create a user
  * @param {Object} user
  * @returns {Promise<User>}
  */
@@ -33,7 +33,7 @@ const createUser = async (user) => {
 };
 
 /**
- * Get device by id
+ * Get user by id
  * @param {ObjectId} id
  * @returns {Promise<User>}
  */
@@ -42,10 +42,19 @@ const getUserById = async (id) => {
 };
 
 /**
- * Update device by id
+ * Get user by id
+ * @param {ObjectId} id
+ * @returns {Promise<[device]>}
+ */
+const getUserDevicesByUserId = async (id) => {
+  return User.findById(id).select('devices').populate({ path: 'devices' });
+};
+
+/**
+ * Update user by id
  * @param {ObjectId} userId
  * @param {Object} updateUser
- * @returns {Promise<Device>}
+ * @returns {Promise<User>}
  */
 const updateUserById = async (userId, updateBody) => {
   const user = await getUserById(userId);
@@ -64,7 +73,7 @@ const updateUserById = async (userId, updateBody) => {
 };
 
 /**
- * Delete device by id
+ * Delete user by id
  * @param {ObjectId} userId
  * @returns {Promise<User>}
  */
@@ -83,4 +92,6 @@ module.exports = {
   createUser,
   updateUserById,
   deleteUserById,
+  getUserById,
+  getUserDevicesByUserId,
 };

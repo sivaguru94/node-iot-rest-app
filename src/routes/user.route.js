@@ -18,4 +18,6 @@ router
   .patch(validate(userValidation.updateUserById), userController.updateUserById)
   .delete(validate(userValidation.deleteUser), userController.deleteUser);
 
+router.route('/:userId/devices').get(validate(userValidation.getUserDevicesByUserId), userController.getUserDevicesByUserId);
+
 module.exports = router;

@@ -28,6 +28,12 @@ const getUserById = {
   }),
 };
 
+const getUserDevicesByUserId = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+};
+
 const deleteUser = {
   params: Joi.object().keys({
     deviceId: Joi.string().custom(objectId),
@@ -51,6 +57,7 @@ module.exports = {
   getUserByName,
   getUserByEmail,
   getUserById,
+  getUserDevicesByUserId,
   updateUserById,
   deleteUser,
 };

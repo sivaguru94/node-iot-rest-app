@@ -12,30 +12,38 @@ const createUser = catchAsync(async (req, res) => {
 const getUserById = catchAsync(async (req, res) => {
   const user = await userService.getUserById(req.params.userId);
   if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  res.send(success(user, 'Succesfully Retrived User'));
+});
+
+const getUserDevicesByUserId = catchAsync(async (req, res) => {
+  const devices = await userService.getUserDevicesByUserId(req.params.userId);
+  if (!devices) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Device not found');
   }
-  res.send(success({ user }));
+  res.send(success(devices, 'Succesfully Retrived User Devices'));
 });
 
 const getUserByName = catchAsync(async (req, res) => {
   const user = await userService.getUserByName(req.params.name);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Device not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  res.send(success({ user }));
+  res.send(success(user, 'Succesfully Retrived User'));
 });
 
 const getUserByEmail = catchAsync(async (req, res) => {
   const user = await userService.getUserByEmail(req.params.email);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Device not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  res.send(success({ user }));
+  res.send(success(user, 'Succesfully Retrived User'));
 });
 
 const updateUserById = catchAsync(async (req, res) => {
-  const device = await userService.updateUserById(req.params.userId, req.body);
-  res.send(success({ device }, 'User Updated Successfully'));
+  const user = await userService.updateUserById(req.params.userId, req.body);
+  res.send(success(user, 'User Updated Successfully'));
 });
 
 const deleteUser = catchAsync(async (req, res) => {
@@ -46,6 +54,7 @@ const deleteUser = catchAsync(async (req, res) => {
 module.exports = {
   createUser,
   getUserById,
+  getUserDevicesByUserId,
   getUserByName,
   getUserByEmail,
   updateUserById,

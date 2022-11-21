@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+      private: true,
     },
     devices: [
       {
@@ -30,7 +31,8 @@ const userSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
+  { toJSON: true }
 );
 
 userSchema.plugin(toJSON);
