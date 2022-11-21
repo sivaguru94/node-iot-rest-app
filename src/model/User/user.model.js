@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema(
 
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
-userSchema.pre('save', (next) => {
+userSchema.pre('save', function (next) {
   const user = this;
 
   if (this.isModified('password') || this.isNew) {

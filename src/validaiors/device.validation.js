@@ -6,7 +6,7 @@ const createDevice = {
     name: Joi.string().required(),
     room: Joi.string().required(),
     isDeviceOn: Joi.boolean().required(),
-    userId: Joi.string().custom(objectId),
+    userId: Joi.string().custom(objectId).required(),
   }),
 };
 

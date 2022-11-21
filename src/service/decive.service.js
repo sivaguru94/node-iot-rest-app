@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Device } = require('../model');
+const { Device, User } = require('../model');
 const ApiError = require('../utils/ApiError');
 const utils = require('../utils/AppUtils');
 const mqtt = require('./mqtt.service');
@@ -30,11 +30,18 @@ const getDeviceByTopic = async (topic) => {
 const createDevice = async (deviceBody) => {
   const device = {
     ...deviceBody,
+    user: deviceBody.userId,
     topic: utils.generateTopic(deviceBody.room, deviceBody.name),
   };
   const duplicateDevice = await getDeviceByTopic(device.topic);
   if (duplicateDevice.length > 0) throw new Error('Device Already Exists');
-  return Device.create(device);
+  return Device.create(device).then((docDevice) => {
+    return User.findByIdAndUpdate(
+      device.userId,
+      { $push: { devices: docDevice._id } },
+      { new: true, useFindAndModify: false }
+    );
+  });
 };
 
 /**
