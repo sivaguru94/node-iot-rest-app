@@ -31,7 +31,7 @@ const createDevice = async (userId, deviceBody) => {
   const device = {
     ...deviceBody,
     user: userId,
-    topic: utils.generateTopic(deviceBody.room, deviceBody.name),
+    topic: utils.generateTopic(userId, deviceBody.room, deviceBody.name),
   };
   const duplicateDevice = await getDeviceByTopic(device.topic);
   if (duplicateDevice.length > 0) throw new Error('Device Already Exists');
@@ -85,7 +85,7 @@ const updateDeviceById = async (deviceId, updateBody, user) => {
     name: updateBody.name || device.name,
     room: updateBody.room || device.room,
   };
-  updateObject.topic = utils.generateTopic(updateObject.room, updateObject.name);
+  updateObject.topic = utils.generateTopic(user.id, updateObject.room, updateObject.name);
   Object.assign(device, updateObject);
   await device.save();
   return device;

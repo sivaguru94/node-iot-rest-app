@@ -1,4 +1,3 @@
-const { invalid } = require('joi');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const { TOKEN_EXPIRY } = require('../utils/AppConstants');
@@ -20,6 +19,7 @@ const authenticate = (req, res, next) => {
 const getRouteValidators = (...validators) => {
   return [authenticate, ...validators];
 };
+
 module.exports = {
   generateAccessToken,
   authenticate,

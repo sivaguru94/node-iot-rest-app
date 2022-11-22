@@ -1,5 +1,4 @@
 const httpStatus = require('http-status');
-const _ = require('lodash');
 const { User } = require('../model');
 const ApiError = require('../utils/ApiError');
 const utils = require('../utils/AppUtils');

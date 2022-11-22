@@ -4,7 +4,7 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { deviceService } = require('../service');
 const logger = require('../config/logger');
-const { success } = require('../utils/AppUtils');
+const { success, verifyDeviceAccess } = require('../utils/AppUtils');
 
 const createDevice = catchAsync(async (req, res) => {
   const device = await deviceService.createDevice(req.user.id, req.body);
@@ -23,34 +23,35 @@ const getDevice = catchAsync(async (req, res) => {
   if (!device) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Device not found');
   }
+  verifyDeviceAccess(req.user, device);
   res.send(success({ device }));
 });
 
 const updateDevice = catchAsync(async (req, res) => {
-  const device = await deviceService.updateDeviceById(req.params.deviceId, req.body);
+  const device = await deviceService.updateDeviceById(req.params.deviceId, req.body, req.user);
   res.send(success({ device }, 'Devices Updated Successfully'));
 });
 
 const deleteDevice = catchAsync(async (req, res) => {
-  await deviceService.deleteDeviceById(req.params.deviceId);
+  await deviceService.deleteDeviceById(req.params.deviceId, req.user);
   res.send(success(req.params.deviceId, 'Devices Deleted Successfully'));
 });
 
 const sendMqttMessageByDeviceID = catchAsync(async (req, res) => {
-  deviceService
-    .sendMqttMessageByDeviceID(req.params.deviceId, req.body.message)
+  return deviceService
+    .sendMqttMessageByDeviceID(req.params.deviceId, req.body.message, req.user)
     .then((data) => {
       logger.info(data);
       res.send(success(req.params.deviceId, `Sent message to device ${req.params.deviceId}`));
     })
     .catch((err) => {
-      throw new ApiError(httpStatus[500], `${err}`);
+      throw new ApiError(err.statusCode || httpStatus.INTERNAL_SERVER_ERROR, `${err.message}`);
     });
 });
 
 const toggleTurnOnOffDevice = catchAsync(async (req, res) => {
-  deviceService
-    .toggleTurnOnOffDevice(req.params.deviceId)
+  return deviceService
+    .toggleTurnOnOffDevice(req.params.deviceId, req.user)
     .then((device) => {
       logger.info(device);
       res.send(success(device, `Device Turned ${device.isDeviceOn ? 'on' : 'off'}`));
