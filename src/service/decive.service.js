@@ -37,8 +37,13 @@ const createDevice = async (userId, deviceBody) => {
   if (duplicateDevice.length > 0) throw new Error('Device Already Exists');
 
   return Device.create(device).then((docDevice) => {
-    User.findByIdAndUpdate(device.user, { $push: { devices: docDevice._id } }, { new: true, useFindAndModify: false });
-    return docDevice;
+    return User.findByIdAndUpdate(
+      userId,
+      { $push: { devices: docDevice._id } },
+      { new: true, useFindAndModify: false }
+    ).then(() => {
+      return docDevice;
+    });
   });
 };
 
@@ -70,12 +75,12 @@ const getDeviceById = async (id) => {
  * @param {Object} updateBody
  * @returns {Promise<Device>}
  */
-const updateDeviceById = async (deviceId, updateBody) => {
+const updateDeviceById = async (deviceId, updateBody, user) => {
   const device = await getDeviceById(deviceId);
   if (!device) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Device not found');
   }
-
+  utils.verifyDeviceAccess(user, device);
   const updateObject = {
     name: updateBody.name || device.name,
     room: updateBody.room || device.room,
@@ -91,28 +96,31 @@ const updateDeviceById = async (deviceId, updateBody) => {
  * @param {ObjectId} deviceId
  * @returns {Promise<Device>}
  */
-const deleteDeviceById = async (deviceId) => {
+const deleteDeviceById = async (deviceId, user) => {
   const device = await getDeviceById(deviceId);
   if (!device) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Device not found');
   }
+  utils.verifyDeviceAccess(user, device);
   await device.remove();
   return device;
 };
 
-const sendMqttMessageByDeviceID = async (deviceId, message) => {
+const sendMqttMessageByDeviceID = async (deviceId, message, user) => {
   const device = await getDeviceById(deviceId);
   if (!device) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Device not found');
   }
+  utils.verifyDeviceAccess(user, device);
   return mqtt.sendMqttMessageToDevice(device, JSON.stringify(message));
 };
 
-const toggleTurnOnOffDevice = async (deviceId) => {
+const toggleTurnOnOffDevice = async (deviceId, user) => {
   const device = await getDeviceById(deviceId);
   if (!device) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Device not found');
   }
+  utils.verifyDeviceAccess(user, device);
   // Send Mqtt Message
   try {
     await mqtt.sendMqttMessageToDevice(device, `${!device.isDeviceOn}`);
