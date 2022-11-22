@@ -7,7 +7,7 @@ const logger = require('../config/logger');
 const { success } = require('../utils/AppUtils');
 
 const createDevice = catchAsync(async (req, res) => {
-  const device = await deviceService.createDevice(req.body);
+  const device = await deviceService.createDevice(req.user.id, req.body);
   res.status(httpStatus.CREATED).send(success({ device }, 'Device Successfully Created'));
 });
 

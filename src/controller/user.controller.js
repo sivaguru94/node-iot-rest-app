@@ -5,8 +5,16 @@ const { userService } = require('../service');
 const { success } = require('../utils/AppUtils');
 
 const createUser = catchAsync(async (req, res) => {
-  const device = await userService.createUser(req.body);
-  res.status(httpStatus.CREATED).send(success({ device }, 'User Successfully Created'));
+  const user = await userService.createUser(req.body);
+  res.status(httpStatus.CREATED).send(success(user, 'User Successfully Created'));
+});
+
+const userLogin = catchAsync(async (req, res) => {
+  const token = await userService.userLogin(req.body);
+  if (!token) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid Email or Password');
+  }
+  res.status(httpStatus.CREATED).send(success(token, 'Logged In!'));
 });
 
 const getUserById = catchAsync(async (req, res) => {
@@ -18,7 +26,8 @@ const getUserById = catchAsync(async (req, res) => {
 });
 
 const getUserDevicesByUserId = catchAsync(async (req, res) => {
-  const devices = await userService.getUserDevicesByUserId(req.params.userId);
+  console.log(req.user);
+  const devices = await userService.getUserDevicesByUserId(req.user.id);
   if (!devices) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Device not found');
   }
@@ -42,7 +51,7 @@ const getUserByEmail = catchAsync(async (req, res) => {
 });
 
 const updateUserById = catchAsync(async (req, res) => {
-  const user = await userService.updateUserById(req.params.userId, req.body);
+  const user = await userService.updateUserById(req.user.id, req.body);
   res.send(success(user, 'User Updated Successfully'));
 });
 
@@ -53,6 +62,7 @@ const deleteUser = catchAsync(async (req, res) => {
 
 module.exports = {
   createUser,
+  userLogin,
   getUserById,
   getUserDevicesByUserId,
   getUserByName,

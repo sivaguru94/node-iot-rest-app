@@ -1,5 +1,9 @@
+const bcrypt = require('bcryptjs');
+
 const removeAllSpaceFromString = (str) => str.replace(/\s/g, '');
+
 const generateTopic = (room, name) => `${removeAllSpaceFromString(room)}/${removeAllSpaceFromString(name)}`;
+
 const success = (result, message = '') => {
   return {
     status: 'SUCCESS',
@@ -8,8 +12,13 @@ const success = (result, message = '') => {
   };
 };
 
+const bcryptCompare = (password, passwordHash) => {
+  return bcrypt.compare(password, passwordHash);
+};
+
 module.exports = {
   removeAllSpaceFromString,
   generateTopic,
   success,
+  bcryptCompare,
 };

@@ -1,7 +1,19 @@
 const httpStatus = require('http-status');
+const _ = require('lodash');
 const { User } = require('../model');
 const ApiError = require('../utils/ApiError');
 const utils = require('../utils/AppUtils');
+const authService = require('../auth/auth.service');
+
+/**
+ * Get user by name
+ * @param {Object} query Mongo Query for FindOne
+ * @param {string} select Fillds to include / exclude
+ * @returns {Promise<User>}
+ */
+const getOneUser = (query, select) => {
+  return User.findOne(query).select(select);
+};
 
 /**
  * Get user by name
@@ -18,7 +30,7 @@ const getUserByName = async (name) => {
  * @returns {Promise<User>}
  */
 const getUserByEmail = async (email) => {
-  return User.find({ email });
+  return User.findOne({ email });
 };
 
 /**
@@ -28,8 +40,19 @@ const getUserByEmail = async (email) => {
  */
 const createUser = async (user) => {
   const duplicateUser = await getUserByEmail(user.email);
-  if (duplicateUser.length > 0) throw new Error('User Already Exists');
+  if (duplicateUser) throw new ApiError(httpStatus.CONFLICT, 'User Already Exists');
   return User.create(user);
+};
+
+const userLogin = async (loginRequest) => {
+  let token = null;
+  const user = await getOneUser({ email: loginRequest.email }, 'name email password');
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
+  const isPasswordValid = await utils.bcryptCompare(loginRequest.password, user.password);
+  if (isPasswordValid) {
+    token = authService.generateAccessToken(user);
+  }
+  return token;
 };
 
 /**
@@ -88,6 +111,7 @@ const deleteUserById = async (userId) => {
 
 module.exports = {
   getUserByName,
+  userLogin,
   getUserByEmail,
   createUser,
   updateUserById,

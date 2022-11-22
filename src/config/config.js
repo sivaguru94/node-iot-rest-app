@@ -15,6 +15,7 @@ const envVarsSchema = Joi.object()
     MOSQUITTO_PORT: Joi.string().required().description('Mqtt connect port'),
     MOSQUITTO_USER_NAME: Joi.string().required().description('Mqtt username'),
     MOSQUITTO_PASSWORD: Joi.string().description('Mqtt password'),
+    TOKEN_SECRET: Joi.string().description('Token Secret'),
   })
   .unknown();
 
@@ -41,4 +42,5 @@ module.exports = {
     user: envVars.MOSQUITTO_USER_NAME,
     password: envVars.MOSQUITTO_PASSWORD,
   },
+  tokenSecret: envVars.TOKEN_SECRET,
 };

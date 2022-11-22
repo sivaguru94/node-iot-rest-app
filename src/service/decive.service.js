@@ -27,20 +27,18 @@ const getDeviceByTopic = async (topic) => {
  * @param {Object} deviceBody
  * @returns {Promise<Device>}
  */
-const createDevice = async (deviceBody) => {
+const createDevice = async (userId, deviceBody) => {
   const device = {
     ...deviceBody,
-    user: deviceBody.userId,
+    user: userId,
     topic: utils.generateTopic(deviceBody.room, deviceBody.name),
   };
   const duplicateDevice = await getDeviceByTopic(device.topic);
   if (duplicateDevice.length > 0) throw new Error('Device Already Exists');
+
   return Device.create(device).then((docDevice) => {
-    return User.findByIdAndUpdate(
-      device.userId,
-      { $push: { devices: docDevice._id } },
-      { new: true, useFindAndModify: false }
-    );
+    User.findByIdAndUpdate(device.user, { $push: { devices: docDevice._id } }, { new: true, useFindAndModify: false });
+    return docDevice;
   });
 };
 

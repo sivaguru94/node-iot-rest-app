@@ -10,6 +10,13 @@ const createUser = {
   }),
 };
 
+const userLogin = {
+  body: Joi.object().keys({
+    email: Joi.string().required(),
+    password: Joi.string().required(),
+  }),
+};
+
 const getUserByName = {
   parama: Joi.object().keys({
     name: Joi.string(),
@@ -28,12 +35,6 @@ const getUserById = {
   }),
 };
 
-const getUserDevicesByUserId = {
-  params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
-  }),
-};
-
 const deleteUser = {
   params: Joi.object().keys({
     deviceId: Joi.string().custom(objectId),
@@ -41,9 +42,6 @@ const deleteUser = {
 };
 
 const updateUserById = {
-  params: Joi.object().keys({
-    deviceId: Joi.required().custom(objectId),
-  }),
   body: Joi.object()
     .keys({
       name: Joi.string().min(1),
@@ -54,10 +52,10 @@ const updateUserById = {
 
 module.exports = {
   createUser,
+  userLogin,
   getUserByName,
   getUserByEmail,
   getUserById,
-  getUserDevicesByUserId,
   updateUserById,
   deleteUser,
 };

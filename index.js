@@ -9,10 +9,8 @@ let server;
 mongoose
   .connect(config.mongoose.url, config.mongoose.options)
   .then(() => {
-    logger.info(`Connecting to MongoDB \n 
-    Connected: \n 
-    URL : ${config.mongoose.url}, 
-    config : ${JSON.stringify(config.mongoose.options)}`);
+    logger.info(`Connecting to MongoDB 
+    Connected: URL : ${config.mongoose.url}, config : ${JSON.stringify(config.mongoose.options)}`);
     server = app.listen(config.port, () => {
       logger.info(`Listening to port ${config.port}`);
     });
